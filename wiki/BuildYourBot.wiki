@@ -1,14 +1,15 @@
 #summary How you can build your own Bot
+#labels Featured
 
 = Introduction =
 
-*LangBots* allows the bots to be written in any language because the interface with the bot  is completely modularized. The bot received the state of the field through the standard input and writes the commands in the standard output, all in text format. That's a universal way of inter-process communication thus it should run in any platform and any (decent) programming language.
+*!LangBots* allows the bots to be written in any language because the interface with the bot  is completely modularized. The bot received the state of the field through the standard input and writes the commands in the standard output, all in text format. That's a universal way of inter-process communication thus it should run in any platform and any (decent) programming language.
 
 = How it works =
 
- 0. The bot is executed with the configuration YAML as first argument
- 0. The bot reads from standard input YAML structures, separated by an empty line.
- 0. For each read YAML the bot *MUST* respond with a command line, even if it's empty. Otherwise the events loop will hang
+ #. The bot is executed with the configuration YAML as first argument
+ #. The bot reads from standard input YAML structures, separated by an empty line.
+ #. For each read YAML the bot *MUST* respond with a command line, even if it's empty. Otherwise the events loop will hang
 
 == Configuration ==
 
@@ -100,3 +101,35 @@ bullets:
   x: 443.10054148534948
   y: 40.597155007198523
 }}}
+
+== Commands ==
+
+The bot writes the response to the standard output using:
+
+{{{
+UPDATE-ID [COMMAND1 [ARG] [COMMAND2 [ARG] ...]
+}}}
+
+The commands are:
+
+ * *set-speed* _SPEED_: Set robot speed. Examples: set-speed 150, set-speed -40
+ * *set-rotation-speed* _SPEED_: Set rotation speed. Examples: set-rotation-speed 90
+ * *set-turret-rotation-speed* _SPEED_: Set turret rotation speed. Examples: set-turret-rotation-speed 90.
+ * *fire*: Fire a bullet. The command will be ignored if time_to_fire is not 0.0.
+ * *rotate-turret-to-angle-and-fire*: You usually want to fire to a given absolute angle, so instead of using__set-turret-rotation-speed_ + _fire_ it's easier to use this command.
+
+Example of command (responds to an update with id=1234):
+
+{{{
+1234 set-speed 40 set-rotation-speed -80 rotate-turret-to-angle-and-fire 45.0
+}}}
+
+Note that commands are executed in parallel so the order in which you write them is not important.
+
+If you are initializing the robot you won't have an update id, you then use "-":
+
+{{{
+- set-speed 50
+}}}
+
+Remember to flush the channel after writing the command.
