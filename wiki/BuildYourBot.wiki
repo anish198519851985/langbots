@@ -7,15 +7,13 @@
 
 = How it works =
 
- #. The bot is executed with the configuration YAML as first argument
+ #. The bot is executed with the configuration YAML file as first argument.
  #. The bot reads from standard input YAML structures, separated by an empty line.
- #. For each read YAML the bot *MUST* respond with a command line, even if it's empty. Otherwise the events loop will hang
+ #. For each read YAML the bot *MUST* respond with a command line, even if it's empty. Otherwise the events loop will hang.
 
-If you are not experiences with the YAML format, check the wikipedia page:
+For more info about the YAML format, check the [http://en.wikipedia.org/wiki/YAML Wikipedia page].
 
-http://en.wikipedia.org/wiki/YAML
-
-All modern programming languages have YAML libraries.
+Note that all modern programming languages have YAML parsing libraries.
 
 == Example ==
 
@@ -61,6 +59,7 @@ map:
 *Langbots* sends info about the field in YAML format. The structure contains the following fields:
 
  * *id*: String identifier of the update.
+ * *time*: Time of simulation (seconds).
  * *robots*: Hash with two keys: _me_ (my robot) and _others_ (the other robots). Each robot is a map with the following keys:
   * *angle*: Angle of the robot (degrees) counter-clockwise. 0º is the robot looking to the right.
   * *rotation*: Rotation speed (degrees/second).
@@ -138,7 +137,7 @@ Example of command (responds to an update with id=1234):
 
 Note that commands are executed in parallel so the order in which you write them is not important.
 
-If you are initializing the robot you won't have an update id, you then use "-" to indicate is not bind to any update:
+If you are initializing the robot you won't have an _update-id_, you then use "-" to indicate that the command is not bound to any update:
 
 {{{
 - set-speed 50
@@ -146,5 +145,5 @@ If you are initializing the robot you won't have an update id, you then use "-" 
 
 == Caveats ==
 
- * You you must send *one and only one command* per update loop. 
+ * You must send *one and only one command* per update loop. 
  * Flush the channel after writing the command.
