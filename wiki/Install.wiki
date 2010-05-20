@@ -3,20 +3,22 @@
 
 == Download ==
 
-For now, !LangBots is available throught the subversion repository:
+!LangBots is available throught the subversion repository:
 
+{{{
 $ svn checkout http://langbots.googlecode.com/svn/trunk/ langbots
+}}}
 
 == Dependencies ==
 
 You need:
- - [http://python.org/ Python].
- - [http://www.pygame.org/ PyGame].
- - [http://pyyaml.org/ PyYAML].
+ * [http://python.org/ Python].
+ * [http://www.pygame.org/ PyGame].
+ * [http://pyyaml.org/ PyYAML].
 
 == How to execute ==
 
-For now the framework is not installable, so we run it from the sources directory. You must then set the PYTHONPATH to include the directory so it can find the *langbots* module:
+For now the framework is not installable, so we must run it from the sources directory. You must then set the _PYTHONPATH_ environment variable to include the directory so it can find the *langbots* module:
 
 {{{
 $ cd /path/to/langbots
