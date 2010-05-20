@@ -3,7 +3,7 @@
 
 = Introduction =
 
-You have started writing you own bot and you want to test it. You have now some options: make it fight against itself, make it fight against other bot or play interactive with you.
+You have started writing you own bot and you want to test it. You have now some options: make it fight against itself, make it fight against other bot or play with it interactive.
 
 == Interactive battle ==
 
