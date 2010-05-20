@@ -16,9 +16,21 @@ You need:
  * [http://www.pygame.org/ PyGame].
  * [http://pyyaml.org/ PyYAML].
 
+On Debian/Ubuntu:
+
+{{{
+$ apt-get install python-pygame python-yaml
+}}}
+
+On ArchLinux:
+
+{{{
+$ pacman -Sy python-pygame pyyaml-python
+}}}
+
 == How to execute ==
 
-For now the framework is not installable, so we must run it from the sources directory. You must then set the _PYTHONPATH_ environment variable to include the directory so it can find the *langbots* module:
+For now the framework is not installable, so you must run it from the sources directory. You must also add the *langbots* root directory to the _PYTHONPATH_ environment variable:
 
 {{{
 $ cd /path/to/langbots
