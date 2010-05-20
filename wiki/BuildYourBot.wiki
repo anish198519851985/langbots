@@ -11,21 +11,27 @@
  #. The bot reads from standard input YAML structures, separated by an empty line.
  #. For each read YAML the bot *MUST* respond with a command line, even if it's empty. Otherwise the events loop will hang
 
+== Example ==
+
+Take a look to the example Python bot:
+
+http://code.google.com/p/langbots/source/browse/#svn/trunk/bots/python
+
 == Configuration ==
 
 The file sent as first argument to the bot has the following structure:
 
- * robot: Hash containing the following keys:
-  * type: Type of the tank. For now, 'tank1', it may change for future versions.
-  * size: [width, height] of the robot (pixels)
-  * shield: Start value for the shield.
-  * max_speed: [max_forward_speed, max_backward_speed] (pixels/second)
-  * rotation_max_speed: The maximum speed of the rotation of the robot (degrees/second).
-  * turret_rotation_max_speed: The maximum speed of the rotation of the turret (relative to the robot) (degrees/second).
-  * fire_min_interval: Interval between consecutive bullets.
-  * bullet_speed: Speed of the bullets.
- * map: Hash containing the following keys:
-  * size: [width, height] of the map (pixels).  
+ * *robot*: Hash containing the following keys:
+  * *type*: Type of the tank. For now, 'tank1', it may change for future versions.
+  * *size*: `[width, height]` of the robot (pixels)
+  * *shield*: Start value for the shield.
+  * *max_speed*: `[max_forward_speed, max_backward_speed]` (pixels/second)
+  * *rotation_max_speed*: The maximum speed of the rotation of the robot (degrees/second).
+  * *turret_rotation_max_speed*: The maximum speed of the rotation of the turret (relative to the robot) (degrees/second).
+  * *fire_min_interval*: Interval between consecutive bullets.
+  * *bullet_speed*: Speed of the bullets.
+ * *map*: Hash containing the following keys:
+  * *size*: `[width, height]` of the map (pixels).  
 
 Example:
 
@@ -48,22 +54,22 @@ map:
 
 *Langbots* sends info about the field in YAML format. The structure contains the following fields:
 
- * id: String identifier of the update
- * robots: Hash with two keys: _me_ (my robot) and _others_ (the other robots). Each robot is a map with the following keys:
-  * angle: Angle of the robot (degrees) counter-clockwise. 0º is the robot looking to the right.
-  * rotation: Rotation speed (degrees/second)
-  * shield: Remaining shield (1 unit = 1 bullet impact). When reaches to zero the robot loses.
-  * speed: Speed of the robot (pixels/second).
-  * time_to_fire: How much time the robot has to wait till the gun is recharged and can fire again (that prevents the robot to send fire bursts).
-  * turret_angle: Angle of the turret relative to the robot position (degrees).
-  * turret_rotation: Speed of the turret rotation (degrees/second)
-  * x: X-position (pixels). x=0 being the left side of the field.
-  * Y: Y-position (pixels). y=0 being the upper side of the field.
- * bullets: List of bullets. Each bullet is a hash with the following keys:
-  * x: X-position (pixels)
-  * y: Y-position (pixels)
-  * speed: Pixels (second)
-  * angle: Linear speed of the bullet (pixels /second)
+ * *id*: String identifier of the update.
+ * *robots*: Hash with two keys: _me_ (my robot) and _others_ (the other robots). Each robot is a map with the following keys:
+  * *angle*: Angle of the robot (degrees) counter-clockwise. 0º is the robot looking to the right.
+  * *rotation*: Rotation speed (degrees/second).
+  * *shield*: Remaining shield (1 unit = 1 bullet impact). When reaches to zero the robot loses.
+  * *x*: X-position (pixels). x=0 being the left side of the field.
+  * *y*: Y-position (pixels). y=0 being the upper side of the field.
+  * *speed*: Speed of the robot (pixels/second).
+  * *time_to_fire*: How much time the robot has to wait till the gun is recharged and can fire again (that prevents the robot to send fire bursts).
+  * *turret_angle*: Angle of the turret relative to the robot position (degrees).
+  * *turret_rotation*: Speed of the turret rotation (degrees/second).
+ * *bullets*: List of bullets. Each bullet is a hash with the following keys:
+  * *x*: X-position (pixels).
+  * *y*: Y-position (pixels).
+  * *angle*: Angle of the direction of the bullet (degrees).
+  * *speed*: Linear speed of the bullet (pixels /second).
 
 Example:
 
@@ -112,11 +118,11 @@ UPDATE-ID [COMMAND1 [ARG] [COMMAND2 [ARG] ...]
 
 The commands are:
 
- * *set-speed* _SPEED_: Set robot speed. Examples: set-speed 150, set-speed -40
- * *set-rotation-speed* _SPEED_: Set rotation speed. Examples: set-rotation-speed 90
- * *set-turret-rotation-speed* _SPEED_: Set turret rotation speed. Examples: set-turret-rotation-speed 90.
+ * *set-speed* _SPEED_: Set robot speed. Examples: `set-speed 150`, `set-speed -40`.
+ * *set-rotation-speed* _SPEED_: Set rotation speed. Examples: `set-rotation-speed 90`.
+ * *set-turret-rotation-speed* _SPEED_: Set turret rotation speed. Examples: `set-turret-rotation-speed 90`.
  * *fire*: Fire a bullet. The command will be ignored if time_to_fire is not 0.0.
- * *rotate-turret-to-angle-and-fire*: You usually want to fire to a given absolute angle, so instead of using__set-turret-rotation-speed_ + _fire_ it's easier to use this command.
+ * *rotate-turret-to-angle-and-fire*: You usually want to fire to a given absolute angle, so instead of using__set-turret-rotation-speed_ + _fire_ it's easier to use this command. Example: `rotate-turret-to-angle-and-fire 60.0`.
 
 Example of command (responds to an update with id=1234):
 
@@ -126,10 +132,13 @@ Example of command (responds to an update with id=1234):
 
 Note that commands are executed in parallel so the order in which you write them is not important.
 
-If you are initializing the robot you won't have an update id, you then use "-":
+If you are initializing the robot you won't have an update id, you then use "-" to indicate is not bind to any update:
 
 {{{
 - set-speed 50
 }}}
 
-Remember to flush the channel after writing the command.
+== Caveats ==
+
+ * You you must send *one and only one command* per update loop. 
+ * Flush the channel after writing the command.
