@@ -11,6 +11,12 @@
  #. The bot reads from standard input YAML structures, separated by an empty line.
  #. For each read YAML the bot *MUST* respond with a command line, even if it's empty. Otherwise the events loop will hang
 
+If you are not experiences with the YAML format, check the wikipedia page:
+
+http://en.wikipedia.org/wiki/YAML
+
+All modern programming languages have YAML libraries.
+
 == Example ==
 
 Take a look to the example Python bot:
