@@ -127,7 +127,7 @@ The commands are:
  * *set-rotation-speed* _SPEED_: Set rotation speed. Examples: `set-rotation-speed 90`.
  * *set-turret-rotation-speed* _SPEED_: Set turret rotation speed. Examples: `set-turret-rotation-speed 90`.
  * *fire*: Fire a bullet. The command will be ignored if time_to_fire is not 0.0.
- * *rotate-turret-to-angle-and-fire*: You usually want to fire to a given absolute angle, so instead of using__set-turret-rotation-speed_ + _fire_ it's easier to use this command. Example: `rotate-turret-to-angle-and-fire 60.0`.
+ * *rotate-turret-to-angle-and-fire* _ANGLE_: When writing a bot is easier to just say what direction you want to fire instead of using__set-turret-rotation-speed_ + _fire_. Example: `rotate-turret-to-angle-and-fire 60.0`.
 
 Example of command (responds to an update with id=1234):
 
