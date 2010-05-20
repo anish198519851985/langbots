@@ -1,0 +1,30 @@
+#summary How to install LangBots.
+#labels Featured
+
+== Download ==
+
+For now, !LangBots is available throught the subversion repository:
+
+$ svn checkout http://langbots.googlecode.com/svn/trunk/ langbots
+
+== Dependencies ==
+
+You need:
+ - [http://python.org/ Python].
+ - [http://www.pygame.org/ PyGame].
+ - [http://pyyaml.org/ PyYAML].
+
+== How to execute ==
+
+For now the framework is not installable, so we run it from the sources directory. You must then set the PYTHONPATH to include the directory so it can find the *langbots* module:
+
+{{{
+$ cd /path/to/langbots
+$ export PYTHONPATH=$PYTHONPATH:.
+}}}
+
+And now you should be able to run the main script:
+
+{{{
+$ langbots/main.py
+}}}
