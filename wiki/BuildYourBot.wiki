@@ -1,29 +1,27 @@
-#summary How you can build your own Bot
+#summary How to write your own Bot in any programming language
 #labels Featured
 
 = Introduction =
 
-*!LangBots* allows the bots to be written in any language because the interface with the bot  is completely modularized. The bot received the state of the field through the standard input and writes the commands in the standard output, all in text format. That's a universal way of inter-process communication thus it should run in any platform and any (decent) programming language.
+*!LangBots* allows the bots to be written in any language because the interface between the bot and the framework uses a universal interface: standard input and standard output.
 
 = How it works =
 
- #. The bot is executed with the configuration YAML file as first argument.
- #. The bot reads from standard input YAML structures, separated by an empty line.
- #. For each read YAML the bot *MUST* respond with a command line, even if it's empty. Otherwise the events loop will hang.
+ #. The bot is spawned with the configuration YAML file as first argument.
+ #. The bot reads from standard input a succession of YAML structures, separated by an empty line. Each structure describe the state of the battlefield (robots and bullets) for a given time.
+ #. For each read YAML the bot *MUST* respond with a command (writing a line to its standard output).
 
-For more info about the YAML format, check the [http://en.wikipedia.org/wiki/YAML Wikipedia page].
-
-Note that all modern programming languages have YAML parsing libraries.
+For more info about the YAML format, check the [http://en.wikipedia.org/wiki/YAML Wikipedia page]. YAML is a pretty ubiquitous format, all modern programming languages have parsing libraries.
 
 == Example ==
 
-Take a look to the example Python bot:
+If you want to see how a bot looks like, take a look to the example Python bot:
 
 http://code.google.com/p/langbots/source/browse/#svn/trunk/bots/python
 
 == Configuration ==
 
-The file sent as first argument to the bot has the following structure:
+The config YAML given as first argument to the bot process has the following structure:
 
  * *robot*: Hash containing the following keys:
   * *type*: Type of the tank. For now, 'tank1', it may change for future versions.
@@ -58,8 +56,8 @@ map:
 
 *Langbots* sends info about the field in YAML format. The structure contains the following fields:
 
- * *id*: String identifier of the update.
- * *time*: Time of simulation (seconds).
+ * *id*: String identifier of the update. It will be used in the response command.
+ * *time*: Time of simulation (seconds). 
  * *robots*: Hash with two keys: _me_ (my robot) and _others_ (the other robots). Each robot is a map with the following keys:
   * *angle*: Angle of the robot (degrees) counter-clockwise. 0º is the robot looking to the right.
   * *rotation*: Rotation speed (degrees/second).
@@ -115,19 +113,21 @@ bullets:
 
 == Commands ==
 
-The bot writes the response to the standard output using:
+The bot writes the response to its standard output with the following syntax:
 
 {{{
 UPDATE-ID [COMMAND1 [ARG] [COMMAND2 [ARG] ...]
 }}}
 
-The commands are:
+_UPDATE-ID_ is the identifier received from the YAML and it must be included in the command to make sure actions are synchronized.
 
- * *set-speed* _SPEED_: Set robot speed. Examples: `set-speed 150`, `set-speed -40`.
- * *set-rotation-speed* _SPEED_: Set rotation speed. Examples: `set-rotation-speed 90`.
+The available commands are:
+
+ * *set-speed* _SPEED_: Set robot speed, positive means forward, negative backwards. Examples: `set-speed 150`, `set-speed -40`.
+ * *set-rotation-speed* _SPEED_: Set rotation speed. Positive means counter-clockwise, negative clockwise. Examples: `set-rotation-speed 90`.
  * *set-turret-rotation-speed* _SPEED_: Set turret rotation speed. Examples: `set-turret-rotation-speed 90`.
  * *fire*: Fire a bullet. The command will be ignored if time_to_fire is not 0.0.
- * *rotate-turret-to-angle-and-fire* _ANGLE_: When writing a bot is easier to just say what direction you want to fire instead of using__set-turret-rotation-speed_ + _fire_. Example: `rotate-turret-to-angle-and-fire 60.0`.
+ * *rotate-turret-to-angle-and-fire* _ANGLE_: When you write a bot you want to fire a bullet to a given angle. Doing so by using _set-turret-rotation-speed_ and _fire_ would be extremely tedious, so this command makes it very easy. Example: `rotate-turret-to-angle-and-fire 60.0`.
 
 Example of command (responds to an update with id=1234):
 
@@ -135,7 +135,7 @@ Example of command (responds to an update with id=1234):
 1234 set-speed 40 set-rotation-speed -80 rotate-turret-to-angle-and-fire 45.0
 }}}
 
-Note that commands are executed in parallel so the order in which you write them is not important.
+Note that commands are executed in parallel, the order in which you write them is not important.
 
 If you are initializing the robot you won't have an _update-id_, you then use "-" to indicate that the command is not bound to any update:
 
@@ -145,5 +145,5 @@ If you are initializing the robot you won't have an _update-id_, you then use "-
 
 == Caveats ==
 
- * You must send *one and only one command* per update loop. 
+ * You must send *one and only one command* per update loop. Otherwise the framework will hang up (eventually, the bot will be disqualified)
  * Flush the channel after writing the command.
